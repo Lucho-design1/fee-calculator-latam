@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Comisiones LatAm | Stripe vs PayPal vs Wise vs USDT</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between font-sans">
+
+  <!-- Header -->
+  <header class="bg-slate-800 border-b border-slate-700 py-6 px-4 shadow-lg">
+    <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <div class="bg-indigo-600 p-3 rounded-xl text-white shadow-md shadow-indigo-500/30">
+          <i class="fa-solid font-bold fa-calculator text-2xl"></i>
+        </div>
+        <div>
+          <h1 class="text-2xl font-bold text-white tracking-tight">Calculadora de Comisiones LatAm</h1>
+          <p class="text-xs text-slate-400">Compara comisiones reales de PayPal, Stripe, Wise y USDT Crypto</p>
+        </div>
+      </div>
+      <a href="https://paypal.me/LucianoBenechCenoz" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4 py-2 rounded-lg text-sm transition shadow-md flex items-center gap-2">
+        <i class="fa-brands fa-paypal"></i> Invitar un café ($1 USD)
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto w-full px-4 py-8 flex-grow">
+    
+    <!-- Input Section -->
+    <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl mb-8">
+      <label class="block text-sm font-semibold text-slate-300 mb-2">Monto a recibir en USD ($):</label>
+      <div class="relative mb-4">
+        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 font-bold text-xl">$</span>
+        <input type="number" id="amountInput" value="100" min="1" step="10" class="w-full pl-10 pr-4 py-3 bg-slate-900 border border-slate-600 rounded-xl text-white font-bold text-xl focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition">
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="setAmount(25)" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg text-xs font-semibold">$25</button>
+        <button onclick="setAmount(50)" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg text-xs font-semibold">$50</button>
+        <button onclick="setAmount(100)" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg text-xs font-semibold">$100</button>
+        <button onclick="setAmount(500)" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg text-xs font-semibold">$500</button>
+        <button onclick="setAmount(1000)" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg text-xs font-semibold">$1000</button>
+      </div>
+    </div>
+
+    <!-- Results Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" id="resultsContainer">
+      <!-- Dynamic content via JS -->
+    </div>
+
+    <!-- Recommendation Banner -->
+    <div id="recommendationBox" class="bg-gradient-to-r from-indigo-900/50 to-slate-800 border border-indigo-500/40 rounded-2xl p-6 mb-8 text-center">
+      <h3 class="text-lg font-bold text-indigo-300 mb-1"><i class="fa-solid fa-lightbulb text-yellow-400 mr-2"></i>Opción más eficiente</h3>
+      <p id="recommendationText" class="text-slate-200 text-sm">Cargando recomendación...</p>
+    </div>
+
+    <!-- Lead & Monetization Banner -->
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div>
+        <h4 class="text-lg font-bold text-white mb-1">¿Necesitas integrar pasarelas de pago o automatizar tus cobros?</h4>
+        <p class="text-sm text-slate-400">Configuramos tu pasarela Stripe/PayPal o Bots de cobranza por $49 USD.</p>
+      </div>
+      <a href="https://paypal.me/LucianoBenechCenoz/49" target="_blank" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition whitespace-nowrap shadow-lg shadow-indigo-600/30 flex items-center gap-2">
+        <i class="fa-solid fa-paper-plane"></i> Solicitar Servicio ($49 USD)
+      </a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-slate-950 border-t border-slate-800 py-6 px-4 text-center text-xs text-slate-500">
+    <p class="mb-2">Herramienta desarrollada por el Enjambre Autónomo de Monetización | <a href="https://gomining.com/?ref=tCW6U" target="_blank" class="text-indigo-400 underline">Descubre Minería Pasiva GoMining</a></p>
+    <p>© 2025 Lucho Design. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    const platforms = [
+      { id: 'usdt', name: 'USDT Crypto (Polygon)', feePct: 0, feeFixed: 0.50, color: 'emerald', icon: 'fa-coins', badge: 'Más Económico' },
+      { id: 'wise', name: 'Wise (Transferencia)', feePct: 0.018, feeFixed: 0.45, color: 'blue', icon: 'fa-building-columns' },
+      { id: 'stripe', name: 'Stripe Int.', feePct: 0.039, feeFixed: 0.30, color: 'indigo', icon: 'fa-credit-card' },
+      { id: 'paypal', name: 'PayPal Int.', feePct: 0.054, feeFixed: 0.30, color: 'amber', icon: 'fa-paypal' }
+    ];
+
+    function calculate() {
+      const amount = parseFloat(document.getElementById('amountInput').value) || 0;
+      const container = document.getElementById('resultsContainer');
+      container.innerHTML = '';
+
+      let bestPlatform = null;
+      let minCommission = Infinity;
+
+      platforms.forEach(p => {
+        const fee = (amount * p.feePct) + p.feeFixed;
+        const net = Math.max(0, amount - fee);
+        const pctEffective = amount > 0 ? ((fee / amount) * 100).toFixed(1) : 0;
+
+        if (fee < minCommission && amount > 0) {
+          minCommission = fee;
+          bestPlatform = p;
+        }
+
+        const card = document.createElement('div');
+        card.className = `bg-slate-800 rounded-xl p-5 border border-slate-700 flex flex-col justify-between shadow-lg relative overflow-hidden`;
+        card.innerHTML = `
+          ${p.badge ? `<span class="absolute top-0 right-0 bg-emerald-500 text-slate-950 text-[10px] font-extrabold px-2 py-0.5 rounded-bl-lg uppercase">${p.badge}</span>` : ''}
+          <div>
+            <div class="flex items-center gap-2 mb-3 text-${p.color}-400">
+              <i class="fa-solid ${p.icon} text-lg"></i>
+              <h4 class="font-bold text-slate-100 text-sm">${p.name}</h4>
+            </div>
+            <div class="mb-4">
+              <p class="text-xs text-slate-400">Recibes neto:</p>
+              <p class="text-2xl font-extrabold text-white">$${net.toFixed(2)}</p>
+            </div>
+          </div>
+          <div class="border-t border-slate-700/60 pt-3 text-xs text-slate-400 space-y-1">
+            <div class="flex justify-between"><span>Comisión total:</span> <span class="font-bold text-rose-400">$${fee.toFixed(2)}</span></div>
+            <div class="flex justify-between"><span>Tarifa efectiva:</span> <span class="font-semibold text-slate-300">${pctEffective}%</span></div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      if (bestPlatform && amount > 0) {
+        document.getElementById('recommendationText').innerHTML = 
+          `Para un monto de <strong>$${amount} USD</strong>, la opción más económica es <strong>${bestPlatform.name}</strong>, dejándote <strong>$${(amount - minCommission).toFixed(2)} USD netos</strong> (pagas solo $${minCommission.toFixed(2)} en comisiones).`;
+      }
+    }
+
+    function setAmount(val) {
+      document.getElementById('amountInput').value = val;
+      calculate();
+    }
+
+    document.getElementById('amountInput').addEventListener('input', calculate);
+    calculate();
+  </script>
+</body>
+</html>
