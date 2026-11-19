@@ -1,10 +1,16 @@
-# Calculadora de Comisiones Freelance LatAm (Stripe vs PayPal vs Wise vs Crypto)
+# Calculadora de Comisiones LatAm
 
-Herramienta gratuita e interactiva para calcular y comparar comisiones efectivas de cobranza en América Latina.
+Calcula cuánto dinero te queda de verdad al cobrar en dólares desde Latinoamérica con PayPal, Stripe, Wise o USDT, incluyendo el costo de pasar a tu moneda local.
 
-🌐 **Sitio Web Online**: https://lucho-design1.github.io/fee-calculator-latam/
+**Sitio:** https://lucho-design1.github.io/fee-calculator-latam/
 
-## Características:
-- Comparación en tiempo real de PayPal, Stripe, Wise y USDT Crypto.
-- Recomendación automática del método más económico según el monto a cobrar.
-- Desglose detallado de tarifas fijos y porcentuales.
+## Qué hace
+- Compara lo que te queda neto con cada plataforma.
+- Suma por separado el costo de convertir a moneda local.
+- Permite ajustar cada comisión a tu país (los valores por defecto son referencias aproximadas).
+- Funciona en el navegador; no guarda ni envía datos.
+
+## Aviso
+Es una guía orientativa, no asesoría financiera. Confirma las tarifas en el sitio oficial de cada plataforma.
+
+Si te sirvió: https://paypal.me/LucianoBenechCenoz
