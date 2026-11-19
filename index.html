@@ -3,139 +3,192 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora de Comisiones LatAm | Stripe vs PayPal vs Wise vs USDT</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>Calculadora de Comisiones LatAm | PayPal vs Stripe vs Wise vs USDT</title>
+  <meta name="description" content="Calcula cuánto dinero te queda de verdad al cobrar en dólares desde Latinoamérica con PayPal, Stripe, Wise o USDT, incluyendo el costo de pasar a tu moneda local. Gratis y sin registro.">
+  <meta property="og:title" content="¿Cuánto te queda de verdad al cobrar en dólares?">
+  <meta property="og:description" content="Compara PayPal, Stripe, Wise y USDT con comisiones ajustables y el costo de conversión a moneda local.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lucho-design1.github.io/fee-calculator-latam/">
+  <link rel="canonical" href="https://lucho-design1.github.io/fee-calculator-latam/">
+  <style>
+    :root {
+      --bg: #f5f7f6; --card: #ffffff; --text: #17201c; --muted: #5d6b64; --line: #dbe2de;
+      --accent: #0f7b5a; --accent-soft: #e2f3ec; --bad: #b4372b; --best: #0f7b5a;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #111715; --card: #19211e; --text: #e8efeb; --muted: #9db0a7; --line: #2b3632;
+              --accent: #4fd1a1; --accent-soft: #173229; --bad: #ff8c80; --best: #4fd1a1; color-scheme: dark; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text);
+           font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 16px; line-height: 1.55; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 32px 16px 64px; display: flex; flex-direction: column; gap: 28px; }
+    h1 { font-size: clamp(1.6rem, 4vw, 2.3rem); line-height: 1.2; margin: 0; }
+    h2 { font-size: 1.25rem; margin: 0 0 12px; }
+    p { margin: 0; }
+    .muted { color: var(--muted); }
+    .panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+    label { font-weight: 600; display: block; margin-bottom: 6px; }
+    .amount { display: flex; align-items: center; gap: 8px; }
+    .amount span { font-size: 1.6rem; font-weight: 700; color: var(--muted); }
+    input[type=number] { width: 100%; padding: 10px 12px; font-size: 1rem; border: 1px solid var(--line);
+      border-radius: 8px; background: var(--bg); color: var(--text); font-variant-numeric: tabular-nums; }
+    #amount { font-size: 1.6rem; font-weight: 700; max-width: 260px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .chips button { border: 1px solid var(--line); background: var(--bg); color: var(--text); padding: 6px 12px;
+      border-radius: 999px; cursor: pointer; font-size: .9rem; }
+    .chips button:hover, .chips button:focus-visible { border-color: var(--accent); outline: none; }
+    .check { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; font-weight: 400; }
+    .check input { margin-top: 4px; width: 18px; height: 18px; accent-color: var(--accent); }
+    .results { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+    .res { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+    .res.best { border: 2px solid var(--best); }
+    .res .name { font-weight: 700; display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+    .res .tag { font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; background: var(--accent-soft); color: var(--accent); padding: 2px 8px; border-radius: 999px; }
+    .res .net { font-size: 1.8rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .res .row { display: flex; justify-content: space-between; font-size: .9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .res .row b { color: var(--bad); font-weight: 600; }
+    .res .note { font-size: .8rem; color: var(--muted); }
+    .reco { background: var(--accent-soft); border-radius: 12px; padding: 16px 18px; }
+    .table-wrap { overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; min-width: 560px; }
+    th, td { padding: 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+    th { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+    td input { max-width: 110px; }
+    .reset { margin-top: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--text); padding: 8px 14px; border-radius: 8px; cursor: pointer; }
+    details { border-top: 1px solid var(--line); padding: 12px 0; }
+    details:last-child { border-bottom: 1px solid var(--line); }
+    summary { cursor: pointer; font-weight: 600; }
+    details p { margin-top: 8px; color: var(--muted); }
+    footer { font-size: .9rem; color: var(--muted); display: flex; flex-direction: column; gap: 6px; }
+    a { color: var(--accent); }
+  </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between font-sans">
+<body>
+<div class="wrap">
 
-  <!-- Header -->
-  <header class="bg-slate-800 border-b border-slate-700 py-6 px-4 shadow-lg">
-    <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-      <div class="flex items-center gap-3">
-        <div class="bg-indigo-600 p-3 rounded-xl text-white shadow-md shadow-indigo-500/30">
-          <i class="fa-solid font-bold fa-calculator text-2xl"></i>
-        </div>
-        <div>
-          <h1 class="text-2xl font-bold text-white tracking-tight">Calculadora de Comisiones LatAm</h1>
-          <p class="text-xs text-slate-400">Compara comisiones reales de PayPal, Stripe, Wise y USDT Crypto</p>
-        </div>
-      </div>
-      <a href="https://paypal.me/LucianoBenechCenoz" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4 py-2 rounded-lg text-sm transition shadow-md flex items-center gap-2">
-        <i class="fa-brands fa-paypal"></i> Invitar un café ($1 USD)
-      </a>
-    </div>
+  <header style="display:flex;flex-direction:column;gap:10px">
+    <h1>¿Cuánto te queda de verdad al cobrar en dólares?</h1>
+    <p class="muted">Compara PayPal, Stripe, Wise y USDT desde Latinoamérica. Incluye el costo de pasar los dólares a tu moneda local, que es donde más se pierde. Gratis, sin registro y sin guardar tus datos.</p>
   </header>
 
-  <!-- Main Content -->
-  <main class="max-w-4xl mx-auto w-full px-4 py-8 flex-grow">
-    
-    <!-- Input Section -->
-    <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl mb-8">
-      <label class="block text-sm font-semibold text-slate-300 mb-2">Monto a recibir en USD ($):</label>
-      <div class="relative mb-4">
-        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 font-bold text-xl">$</span>
-        <input type="number" id="amountInput" value="100" min="1" step="10" class="w-full pl-10 pr-4 py-3 bg-slate-900 border border-slate-600 rounded-xl text-white font-bold text-xl focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition">
-      </div>
-      <div class="flex flex-wrap gap-2">
-        <button onclick="setAmount(25)" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg text-xs font-semibold">$25</button>
-        <button onclick="setAmount(50)" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg text-xs font-semibold">$50</button>
-        <button onclick="setAmount(100)" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg text-xs font-semibold">$100</button>
-        <button onclick="setAmount(500)" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg text-xs font-semibold">$500</button>
-        <button onclick="setAmount(1000)" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg text-xs font-semibold">$1000</button>
-      </div>
+  <section class="panel">
+    <label for="amount">Monto que te pagan (USD)</label>
+    <div class="amount"><span>$</span><input type="number" id="amount" value="500" min="0" step="10" inputmode="decimal"></div>
+    <div class="chips">
+      <button type="button" data-v="50">$50</button>
+      <button type="button" data-v="100">$100</button>
+      <button type="button" data-v="500">$500</button>
+      <button type="button" data-v="1000">$1.000</button>
+      <button type="button" data-v="3000">$3.000</button>
     </div>
+    <label class="check" for="convert"><input type="checkbox" id="convert" checked>
+      <span>Voy a convertir el dinero a mi moneda local (pesos, soles, reales…). Desmárcalo si guardas los dólares.</span></label>
+  </section>
 
-    <!-- Results Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" id="resultsContainer">
-      <!-- Dynamic content via JS -->
+  <section>
+    <div class="results" id="results"></div>
+  </section>
+
+  <section class="reco" id="reco" aria-live="polite"></section>
+
+  <section class="panel">
+    <h2>Ajusta las comisiones a tu país</h2>
+    <p class="muted" style="margin-bottom:12px">Los valores de abajo son <strong>referencias aproximadas</strong> (revisadas en noviembre de 2026). Cada plataforma cobra distinto según el país y el tipo de cuenta. Revisa la página oficial de cada una y cambia los números si los tuyos son otros. La calculadora se actualiza sola.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Plataforma</th><th>Comisión al recibir (%)</th><th>Cargo fijo (USD)</th><th>Conversión a moneda local (%)</th></tr></thead>
+        <tbody id="feeRows"></tbody>
+      </table>
     </div>
+    <button type="button" class="reset" id="reset">Volver a los valores de referencia</button>
+  </section>
 
-    <!-- Recommendation Banner -->
-    <div id="recommendationBox" class="bg-gradient-to-r from-indigo-900/50 to-slate-800 border border-indigo-500/40 rounded-2xl p-6 mb-8 text-center">
-      <h3 class="text-lg font-bold text-indigo-300 mb-1"><i class="fa-solid fa-lightbulb text-yellow-400 mr-2"></i>Opción más eficiente</h3>
-      <p id="recommendationText" class="text-slate-200 text-sm">Cargando recomendación...</p>
-    </div>
+  <section>
+    <h2>Preguntas frecuentes</h2>
+    <details><summary>¿Por qué importa tanto la conversión a moneda local?</summary>
+      <p>Muchas plataformas cobran una comisión pequeña al recibir, pero aplican un tipo de cambio peor que el del mercado cuando pasas los dólares a tu moneda. Esa diferencia no aparece como "comisión", pero es dinero que pierdes. Por eso esta calculadora la suma por separado.</p></details>
+    <details><summary>¿Stripe funciona en mi país?</summary>
+      <p>Stripe solo permite abrir cuentas en algunos países de Latinoamérica (por ejemplo México y Brasil). Si estás en otro país, ignora esa opción.</p></details>
+    <details><summary>¿USDT es siempre lo más barato?</summary>
+      <p>Enviar USDT por redes como TRON o Polygon cuesta poco, pero para tenerlo en tu moneda tienes que venderlo (por ejemplo en un intercambio P2P), y ahí suele haber una diferencia de precio. Además el cliente tiene que saber usar cripto, y no hay forma de reclamar si algo sale mal.</p></details>
+    <details><summary>¿Guardan mis datos?</summary>
+      <p>No. Todo se calcula en tu navegador. Nada se envía a ningún servidor.</p></details>
+  </section>
 
-    <!-- Lead & Monetization Banner -->
-    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-      <div>
-        <h4 class="text-lg font-bold text-white mb-1">¿Necesitas integrar pasarelas de pago o automatizar tus cobros?</h4>
-        <p class="text-sm text-slate-400">Configuramos tu pasarela Stripe/PayPal o Bots de cobranza por $49 USD.</p>
-      </div>
-      <a href="https://paypal.me/LucianoBenechCenoz/49" target="_blank" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition whitespace-nowrap shadow-lg shadow-indigo-600/30 flex items-center gap-2">
-        <i class="fa-solid fa-paper-plane"></i> Solicitar Servicio ($49 USD)
-      </a>
-    </div>
-  </main>
-
-  <!-- Footer -->
-  <footer class="bg-slate-950 border-t border-slate-800 py-6 px-4 text-center text-xs text-slate-500">
-    <p class="mb-2">Herramienta desarrollada por el Enjambre Autónomo de Monetización | <a href="https://gomining.com/?ref=tCW6U" target="_blank" class="text-indigo-400 underline">Descubre Minería Pasiva GoMining</a></p>
-    <p>© 2025 Lucho Design. Todos los derechos reservados.</p>
+  <footer>
+    <p>Esta herramienta es una guía orientativa y no es asesoría financiera. Confirma siempre las tarifas en el sitio oficial de cada plataforma antes de decidir.</p>
+    <p>¿Te ahorró dinero? Puedes <a href="https://paypal.me/LucianoBenechCenoz" target="_blank" rel="noopener">invitarme un café por PayPal</a>.</p>
   </footer>
 
-  <script>
-    const platforms = [
-      { id: 'usdt', name: 'USDT Crypto (Polygon)', feePct: 0, feeFixed: 0.50, color: 'emerald', icon: 'fa-coins', badge: 'Más Económico' },
-      { id: 'wise', name: 'Wise (Transferencia)', feePct: 0.018, feeFixed: 0.45, color: 'blue', icon: 'fa-building-columns' },
-      { id: 'stripe', name: 'Stripe Int.', feePct: 0.039, feeFixed: 0.30, color: 'indigo', icon: 'fa-credit-card' },
-      { id: 'paypal', name: 'PayPal Int.', feePct: 0.054, feeFixed: 0.30, color: 'amber', icon: 'fa-paypal' }
-    ];
+</div>
+<script>
+  // Valores de referencia aproximados. Ajustables por el usuario en la tabla.
+  const DEFAULTS = [
+    { id: 'paypal', name: 'PayPal', pct: 5.4, fixed: 0.30, conv: 4.0,
+      note: 'Pago internacional de un cliente. La conversión incluye el margen de PayPal al pasar a moneda local.' },
+    { id: 'stripe', name: 'Stripe', pct: 4.4, fixed: 0.30, conv: 2.0,
+      note: 'Tarjeta internacional. Solo en algunos países de la región.' },
+    { id: 'wise', name: 'Wise', pct: 0.0, fixed: 0.00, conv: 1.0,
+      note: 'Recibiendo transferencias locales en USD (ACH). Las transferencias SWIFT tienen un cargo fijo.' },
+    { id: 'usdt', name: 'USDT (cripto)', pct: 0.0, fixed: 1.00, conv: 1.5,
+      note: 'Red TRON. La conversión es la diferencia típica al vender en P2P.' }
+  ];
+  let fees = DEFAULTS.map(p => ({ ...p }));
+  const $ = id => document.getElementById(id);
+  const money = n => '$' + n.toLocaleString('es', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-    function calculate() {
-      const amount = parseFloat(document.getElementById('amountInput').value) || 0;
-      const container = document.getElementById('resultsContainer');
-      container.innerHTML = '';
+  function buildRows() {
+    $('feeRows').innerHTML = fees.map((p, i) => `
+      <tr>
+        <td><strong>${p.name}</strong></td>
+        <td><input type="number" step="0.1" min="0" id="pct-${p.id}" data-i="${i}" data-k="pct" value="${p.pct}" aria-label="Comisión de ${p.name} en porcentaje"></td>
+        <td><input type="number" step="0.05" min="0" id="fixed-${p.id}" data-i="${i}" data-k="fixed" value="${p.fixed}" aria-label="Cargo fijo de ${p.name} en dólares"></td>
+        <td><input type="number" step="0.1" min="0" id="conv-${p.id}" data-i="${i}" data-k="conv" value="${p.conv}" aria-label="Conversión de ${p.name} en porcentaje"></td>
+      </tr>`).join('');
+    $('feeRows').querySelectorAll('input').forEach(el => el.addEventListener('input', e => {
+      const v = parseFloat(e.target.value);
+      fees[e.target.dataset.i][e.target.dataset.k] = isNaN(v) || v < 0 ? 0 : v;
+      calc();
+    }));
+  }
 
-      let bestPlatform = null;
-      let minCommission = Infinity;
+  function calc() {
+    const amount = Math.max(0, parseFloat($('amount').value) || 0);
+    const convert = $('convert').checked;
+    const rows = fees.map(p => {
+      const receiveFee = amount * p.pct / 100 + p.fixed;
+      const afterReceive = Math.max(0, amount - receiveFee);
+      const convFee = convert ? afterReceive * p.conv / 100 : 0;
+      const net = Math.max(0, afterReceive - convFee);
+      const lost = amount - net;
+      return { ...p, receiveFee: Math.min(receiveFee, amount), convFee, net, lost };
+    });
+    const best = rows.reduce((a, b) => (b.net > a.net ? b : a), rows[0]);
+    const worst = rows.reduce((a, b) => (b.net < a.net ? b : a), rows[0]);
 
-      platforms.forEach(p => {
-        const fee = (amount * p.feePct) + p.feeFixed;
-        const net = Math.max(0, amount - fee);
-        const pctEffective = amount > 0 ? ((fee / amount) * 100).toFixed(1) : 0;
+    $('results').innerHTML = rows.map(r => `
+      <div class="res ${amount > 0 && r.id === best.id ? 'best' : ''}">
+        <div class="name">${r.name}${amount > 0 && r.id === best.id ? '<span class="tag">Te deja más</span>' : ''}</div>
+        <div class="muted" style="font-size:.85rem">Te queda</div>
+        <div class="net">${money(r.net)}</div>
+        <div class="row"><span>Comisión al recibir</span><b>−${money(r.receiveFee)}</b></div>
+        ${convert ? `<div class="row"><span>Conversión</span><b>−${money(r.convFee)}</b></div>` : ''}
+        <div class="row"><span>Pierdes en total</span><span>${amount > 0 ? (r.lost / amount * 100).toFixed(1) : '0.0'}%</span></div>
+        <div class="note">${r.note}</div>
+      </div>`).join('');
 
-        if (fee < minCommission && amount > 0) {
-          minCommission = fee;
-          bestPlatform = p;
-        }
+    $('reco').innerHTML = amount > 0
+      ? `Con <strong>${money(amount)}</strong>, la opción que más te deja es <strong>${best.name}</strong> (${money(best.net)}). Frente a <strong>${worst.name}</strong>, ahorras <strong>${money(best.net - worst.net)}</strong> en este cobro.`
+      : 'Escribe un monto para comparar.';
+  }
 
-        const card = document.createElement('div');
-        card.className = `bg-slate-800 rounded-xl p-5 border border-slate-700 flex flex-col justify-between shadow-lg relative overflow-hidden`;
-        card.innerHTML = `
-          ${p.badge ? `<span class="absolute top-0 right-0 bg-emerald-500 text-slate-950 text-[10px] font-extrabold px-2 py-0.5 rounded-bl-lg uppercase">${p.badge}</span>` : ''}
-          <div>
-            <div class="flex items-center gap-2 mb-3 text-${p.color}-400">
-              <i class="fa-solid ${p.icon} text-lg"></i>
-              <h4 class="font-bold text-slate-100 text-sm">${p.name}</h4>
-            </div>
-            <div class="mb-4">
-              <p class="text-xs text-slate-400">Recibes neto:</p>
-              <p class="text-2xl font-extrabold text-white">$${net.toFixed(2)}</p>
-            </div>
-          </div>
-          <div class="border-t border-slate-700/60 pt-3 text-xs text-slate-400 space-y-1">
-            <div class="flex justify-between"><span>Comisión total:</span> <span class="font-bold text-rose-400">$${fee.toFixed(2)}</span></div>
-            <div class="flex justify-between"><span>Tarifa efectiva:</span> <span class="font-semibold text-slate-300">${pctEffective}%</span></div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-
-      if (bestPlatform && amount > 0) {
-        document.getElementById('recommendationText').innerHTML = 
-          `Para un monto de <strong>$${amount} USD</strong>, la opción más económica es <strong>${bestPlatform.name}</strong>, dejándote <strong>$${(amount - minCommission).toFixed(2)} USD netos</strong> (pagas solo $${minCommission.toFixed(2)} en comisiones).`;
-      }
-    }
-
-    function setAmount(val) {
-      document.getElementById('amountInput').value = val;
-      calculate();
-    }
-
-    document.getElementById('amountInput').addEventListener('input', calculate);
-    calculate();
-  </script>
+  document.querySelectorAll('.chips button').forEach(b => b.addEventListener('click', () => { $('amount').value = b.dataset.v; calc(); }));
+  $('amount').addEventListener('input', calc);
+  $('convert').addEventListener('change', calc);
+  $('reset').addEventListener('click', () => { fees = DEFAULTS.map(p => ({ ...p })); buildRows(); calc(); });
+  buildRows();
+  calc();
+</script>
 </body>
 </html>
